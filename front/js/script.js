@@ -1,58 +1,46 @@
 /* --- Javascript lié à index.html permettant d'afficher dynamiquement les liens vers les pages produits ---*/
 
 /* Récupération des données de l'API, puis création des élements dans la page d'accueil grâce à une boucle for. */
-fetch("http://localhost:3000/api/products")
+let getData = async () => {
+    await fetch("http://localhost:3000/api/products")
     .then(function(res) {
         if (res.ok) {
             return res.json();
         }
     })
-    .then(function(linksLayout) {
-        console.log(linksLayout);
-        const links = linksLayout;
-        for (let link of links) {
+    .then(function(links) {
+        console.log(links);
+        for (let i = 0; i < links.length; i++) {
             
             let linkHome = document.createElement('a');
-            document.querySelector('.items').appendChild(linkHome);
-            homeLink.href = ``;
+            document.querySelector('#items').append(linkHome);
+            homeLink.href = `#`;
             
             let linkArticle = document.createElement('article');
-            linkHome.appendChild(linkArticle);
+            document.querySelector(linkHome).append(linkArticle);
             
             let linkImg = document.createElement('img');
-            linkImg.src = links[link].imageUrl;
-            linkImg.alt = links[link].altTxt;
-            linkArticle.appendChild(linkImg);
+            linkImg.src = links[i].imageUrl;
+            linkImg.alt = links[i].altTxt;
+            document.querySelector(linkArticle).append(linkImg);
 
             let linkName = document.createElement('h3');
             linkName.classList.add('productName');
-            linkName.innerText = links[link].name;
-            linkArticle.appendChild(linkName);
+            linkName.innerText = links[i].name;
+            document.querySelector(linkArticle).append(linkName);
             
             let linkDescription = document.createElement('p');
             linkName.classList.add('productDescription');
-            linkName.innerText = links[link].description;
-            linkArticle.appendChild(linkDescription);
+            linkName.innerText = links[i].description;
+            document.querySelector(linkArticle).append(linkDescription);
         }
     })
     .catch(function(err) {
         console.log("une erreur est survenue")
     });
+}
 
-
-    /*
-
-.then(function(createProductLink) {
-    
-
-    const imgLink = document.createElement('img');
-    imgLink.src = createProductLink[i].imageUrl);
-
-    
-    console.log(createLinks[i].name);
-    console.log(createLinks[i].description);
-})
-*/
+getData();
 
 
 
