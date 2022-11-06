@@ -13,7 +13,7 @@ const getData = fetch("http://localhost:3000/api/products");
             
             const linkHome = document.createElement('a');
             document.querySelector('#items').append(linkHome);
-            linkHome.href = ``;
+            linkHome.href = `./product.html?id=${links[i]._id}`;
             
             const linkArticle = document.createElement('article');
             linkHome.append(linkArticle);
