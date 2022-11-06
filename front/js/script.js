@@ -13,7 +13,7 @@ const getData = fetch("http://localhost:3000/api/products");
             
             const linkHome = document.createElement('a');
             document.querySelector('#items').append(linkHome);
-            linkHome.href = `./product.html?id=${links[i]._id}`;
+            linkHome.href = ``;
             
             const linkArticle = document.createElement('article');
             linkHome.append(linkArticle);
@@ -44,24 +44,4 @@ avec la boucle for
 document.querySelectorAll('a')
 page d'accueil + 
 url search param pour récuperer id sur detail produit
-ajouter id avec point ?
-
-class Product {
-    constructor(colors, _id, name, price, imageUrl, description, altTxt) {
-        this.colors = colors;
-        this.id = id;
-        this.name = name;
-        this.price = price;
-        this.imageUrl = imageUrl;
-        this.description = description;
-        this.altTxt = altTxt;
-        }
-    }
-
-let products = [
-    new Product(
-        ''
-    )
-]*/
-
-    
+ajouter id avec point ? */
