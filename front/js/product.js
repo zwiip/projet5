@@ -33,6 +33,7 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
 
         const productName = productData.name;
         document.querySelector('#title').textContent = `${productName}`;
+        document.querySelector('title').textContent = `${productName}`;
 
         const productPrice = productData.price;
         document.querySelector('#price').textContent = `${productPrice}`;
@@ -40,6 +41,17 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
         const productDescription = productData.description;
         document.querySelector('#description').textContent = `${productDescription}`;
 
+        const productColors = productData.colors;
+        function getColors(productColors) {
+            for (let i = 0; i < productColors.length; i++) {
+                const option = document.createElement("option");
+                option.value = productColors[i];
+                option.textContent = productColors[i];
+                document.querySelector('#colors').append(option);
+            }
+        }
+        getColors(productColors);
+        
     })
 /**
  * Permet de signaler si une erreur est apparue dans les fonctions précédentes
