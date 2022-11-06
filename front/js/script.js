@@ -1,12 +1,19 @@
-/* --- Javascript lié à index.html permettant d'afficher dynamiquement les liens vers les pages produits ---*/
+/**
+ *  Javascript lié à index.html permettant d'afficher dynamiquement les liens vers les pages produits
+ */
 
-/* Récupération des données de l'API, puis création des élements dans la page d'accueil grâce à une boucle for. */
+/**
+ * Permet de récupérer les données de l'API, de vérifier que c'est bon et de mettre en forme dans un tableau
+ */ 
 const getData = fetch("http://localhost:3000/api/products");
     getData.then(function(res) {
         if (res.ok) {
             return res.json();
         }
     })
+/**
+ * Permet de créer les différents éléments du lien de chaque produit et les répartir dans la page à partir des données de l'API
+ */
     .then(function(links) {
         console.log(links);
         for (let i = 0; i < links.length; i++) {
@@ -34,14 +41,15 @@ const getData = fetch("http://localhost:3000/api/products");
             linkArticle.append(linkDescription);
         }
     })
+/**
+ * Permet de signaler si une erreur est apparue dans les fonctions précédentes
+ */
     .catch(function(err) {
         console.log("une erreur est survenue")
     });
 
-
-/* create element
-avec la boucle for
-document.querySelectorAll('a')
-page d'accueil + 
-url search param pour récuperer id sur detail produit
-ajouter id avec point ? */
+/**
+ * NOTES DE TRAVAIL
+ * document.querySelectorAll('a')
+ * url search param pour récuperer id sur detail produit
+ */
