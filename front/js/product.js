@@ -1,5 +1,6 @@
-/**
+/** ----------------------------------------------------------------------
  * Lié à product.html pour gérer l'affichage dynamique des pages produits
+ * -----------------------------------------------------------------------
  */
 
 /**
@@ -62,3 +63,17 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
         console.log("impossible de charger la page produit")
     });
 
+/** -----------------------------------------------------
+ * Gestion du panier
+ * ------------------------------------------------------
+ */
+
+
+
+/**
+ * NOTE DE TRAVAIL
+ * panier = [productID, quantity, color]
+ * localStorage
+ * if product (id&&color) <1 new product
+ * if product (id&&color) >1 product ++
+ */
