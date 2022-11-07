@@ -41,6 +41,9 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
         const productDescription = productData.description;
         document.querySelector('#description').textContent = `${productDescription}`;
 
+/**
+ * Permet de parcourir le tableau contenant les couleurs du produit et créer une option pour chacune.
+ */
         const productColors = productData.colors;
         function getColors(productColors) {
             for (let i = 0; i < productColors.length; i++) {
@@ -50,8 +53,7 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
                 document.querySelector('#colors').append(option);
             }
         }
-        getColors(productColors);
-        
+        getColors(productColors);    
     })
 /**
  * Permet de signaler si une erreur est apparue dans les fonctions précédentes
@@ -59,3 +61,4 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
     .catch(function(err) {
         console.log("impossible de charger la page produit")
     });
+
