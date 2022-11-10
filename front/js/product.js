@@ -67,14 +67,31 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
  * Gestion du panier
  * ------------------------------------------------------
  */
-const button = document.querySelector('#addToCart')
-button.addEventListener("click", addToCart)
+const button = document.querySelector('#addToCart');
+button.addEventListener('click', checkValues);
+let colorsValue;
+let quantityValue;
 
-function addToCart() {
-    let colorsValue = document.querySelector('#colors').value;
-    let quantityValue = document.querySelector('#quantity').value;
-    console.log(colorsValue, quantityValue)
-}
+function checkValues() {
+    colorsValue = document.querySelector('#colors').value;
+    quantityValue = document.querySelector('#quantity').value;
+    if (colorsValue === "") {
+        alert('Veuillez sélectionner une couleur')
+    }
+    if (quantityValue <= 0) {
+        alert('veuillez ajouter au moins 1 article')
+    }
+    let cart = [
+        productID,
+        colorsValue,
+        quantityValue
+    ]
+    console.log(cart);
+    return cart
+};
+
+
+
 
 /**
  * NOTE DE TRAVAIL
