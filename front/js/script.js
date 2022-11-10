@@ -4,6 +4,7 @@
 
 /**
  * Permet de récupérer les données de l'API, de vérifier que c'est bon et de mettre en forme dans un tableau
+ * Permet de créer les différents éléments du lien de chaque produit et les répartir dans la page à partir des données de l'API
  */ 
 const getData = fetch("http://localhost:3000/api/products");
     getData.then(function(res) {
@@ -11,9 +12,6 @@ const getData = fetch("http://localhost:3000/api/products");
             return res.json();
         }
     })
-/**
- * Permet de créer les différents éléments du lien de chaque produit et les répartir dans la page à partir des données de l'API
- */
     .then(function(links) {
         console.log(links);
         for (let i = 0; i < links.length; i++) {

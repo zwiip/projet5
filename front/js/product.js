@@ -67,8 +67,14 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
  * Gestion du panier
  * ------------------------------------------------------
  */
+const button = document.querySelector('#addToCart')
+button.addEventListener("click", addToCart)
 
-
+function addToCart() {
+    let colorsValue = document.querySelector('#colors').value;
+    let quantityValue = document.querySelector('#quantity').value;
+    console.log(colorsValue, quantityValue)
+}
 
 /**
  * NOTE DE TRAVAIL
