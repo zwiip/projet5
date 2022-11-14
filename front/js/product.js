@@ -68,42 +68,44 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
  * ------------------------------------------------------
  */
 const button = document.querySelector('#addToCart');
-button.addEventListener('click', checkValues);
 let colorsValue;
 let quantityValue;
 let addCart = [];
-
-function checkValues() {
-    colorsValue = document.querySelector('#colors').value;
-    quantityValue = document.querySelector('#quantity').value;
-    if (colorsValue === "") {
-        alert('Veuillez sélectionner une couleur')
+button.addEventListener('click', (checkValues) => {    
+    function checkValues() {
+        colorsValue = document.querySelector('#colors').value;
+        quantityValue = document.querySelector('#quantity').value;
+        if (colorsValue === "") {
+            alert('Veuillez sélectionner une couleur')
+        }
+        if (quantityValue <= 0) {
+            alert('veuillez ajouter au moins 1 article')
+        }
+        addCart = [
+            productID,
+            colorsValue,
+            quantityValue
+        ]
+        console.log(addCart);
+        return addCart
+    };
+    
+    /**
+     * Local storage
+     */
+    let checkStorage = JSON.parse(localStorage.getItem("products"));
+    console.log(checkStorage);
+    
+    if(checkStorage) {
+    
+    } else {
+//        checkStorage = [];
+        checkStorage.push(addCart);
+        localStorage.setItem("products", JSON.stringify(checkStorage))
+        console.log(checkStorage);
     }
-    if (quantityValue <= 0) {
-        alert('veuillez ajouter au moins 1 article')
-    }
-    addCart = [
-        productID,
-        colorsValue,
-        quantityValue
-    ]
-    console.log(cart);
-    return addCart
-};
+});
 
-/**
- * Local storage
- */
-let checkStorage = JSON.parse(local.storage.getItem());
-console.log(checkStorage);
-
-if(checkStorage) {
-
-} else {
-    checkStorage = [];
-    checkStorage.push(addCart);
-    localStorage.setItem("product", JSON.stringify(checkStorage))
-}
 
 
 /**
