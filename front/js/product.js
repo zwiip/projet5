@@ -71,6 +71,7 @@ const button = document.querySelector('#addToCart');
 button.addEventListener('click', checkValues);
 let colorsValue;
 let quantityValue;
+let addCart = [];
 
 function checkValues() {
     colorsValue = document.querySelector('#colors').value;
@@ -81,22 +82,43 @@ function checkValues() {
     if (quantityValue <= 0) {
         alert('veuillez ajouter au moins 1 article')
     }
-    let cart = [
+    addCart = [
         productID,
         colorsValue,
         quantityValue
     ]
     console.log(cart);
-    return cart
+    return addCart
 };
 
+/**
+ * Local storage
+ */
+let checkStorage = JSON.parse(local.storage.getItem());
+console.log(checkStorage);
 
+if(checkStorage) {
+
+} else {
+    checkStorage = [];
+    checkStorage.push(addCart);
+    localStorage.setItem("product", JSON.stringify(checkStorage))
+}
 
 
 /**
  * NOTE DE TRAVAIL
  * panier = [productID, quantity, color]
  * localStorage
+ *  need conversion json
+ *      JSON.stringify convertir valeur javascript en chaine JSON
+ *      JSON.parse conversion JSON à javascript
+ *  méthodes :
+ *      storage.key() renvoie le nom de la n-ième clé dans le stockage
+ *      storage.getItem(nomclé) renvoie la valeur de la clé
+ *      storage.setItem('nomclé', valeur) ajoute la paire clé / valeur dans le stockage, si existe déjà met à jour la valeur
+ *      storage.removeItem('nomclé') supprime la clé du stockage
+ *      storage.clear() supprime toutes les clés du stockage
  * if product (id&&color) <1 new product
  * if product (id&&color) >1 product ++
  */
