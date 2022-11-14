@@ -71,7 +71,32 @@ const button = document.querySelector('#addToCart');
 let colorsValue;
 let quantityValue;
 let addCart = [];
-button.addEventListener('click', (checkValues) => {    
+button.addEventListener('click', (checkValues) => {
+    checkValues
+    if(checkValues) {
+        let addCart = [
+            productID,
+            colorsValue,
+            quantityValue
+        ]
+        console.log(addCart);
+/**
+ * Local storage
+ */
+let checkStorage = JSON.parse(localStorage.getItem("products"));
+console.log(checkStorage);
+     
+if(checkStorage) {
+    localStorage.clear();
+    console.log('ok')
+    } else {
+        checkStorage = [];
+        checkStorage.push(addCart);
+        localStorage.setItem("products", JSON.stringify(checkStorage))
+        console.log(checkStorage);
+    }      
+}
+});
     function checkValues() {
         colorsValue = document.querySelector('#colors').value;
         quantityValue = document.querySelector('#quantity').value;
@@ -81,30 +106,8 @@ button.addEventListener('click', (checkValues) => {
         if (quantityValue <= 0) {
             alert('veuillez ajouter au moins 1 article')
         }
-        addCart = [
-            productID,
-            colorsValue,
-            quantityValue
-        ]
-        console.log(addCart);
         return addCart
     };
-    
-    /**
-     * Local storage
-     */
-    let checkStorage = JSON.parse(localStorage.getItem("products"));
-    console.log(checkStorage);
-    
-    if(checkStorage) {
-    
-    } else {
-//        checkStorage = [];
-        checkStorage.push(addCart);
-        localStorage.setItem("products", JSON.stringify(checkStorage))
-        console.log(checkStorage);
-    }
-});
 
 
 
