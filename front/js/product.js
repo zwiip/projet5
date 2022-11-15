@@ -68,12 +68,14 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
  * ------------------------------------------------------
  */
 const button = document.querySelector('#addToCart');
-let colorsValue;
-let quantityValue;
-let addCart = [];
-button.addEventListener('click', (checkValues) => {
-    checkValues
-    if(checkValues) {
+
+button.addEventListener('click', () => {
+    let colorsValue = document.querySelector('#colors').value;
+    let quantityValue = document.querySelector('#quantity').value;
+    
+    if(colorsValue === "" || quantityValue <= 0) {
+        alert('Veuillez renseigner la quantité et la couleur')
+    } else {
         let addCart = [
             productID,
             colorsValue,
@@ -97,17 +99,7 @@ if(checkStorage) {
     }      
 }
 });
-    function checkValues() {
-        colorsValue = document.querySelector('#colors').value;
-        quantityValue = document.querySelector('#quantity').value;
-        if (colorsValue === "") {
-            alert('Veuillez sélectionner une couleur')
-        }
-        if (quantityValue <= 0) {
-            alert('veuillez ajouter au moins 1 article')
-        }
-        return addCart
-    };
+
 
 
 
