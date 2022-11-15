@@ -87,15 +87,29 @@ button.addEventListener('click', () => {
  */
 let checkStorage = JSON.parse(localStorage.getItem("products"));
 console.log(checkStorage);
-     
+
+function pushStorage() {
+    checkStorage.push(addCart);
+    localStorage.setItem("products", JSON.stringify(checkStorage))
+    console.log(checkStorage);
+}
+
 if(checkStorage) {
-    localStorage.clear();
-    console.log('ok')
+    console.log('il y a quelque chose dans le panier')
+    const checkProduct = checkStorage.find(sameProduct =>
+        sameProduct.productID === addCart.productID
+        && sameProduct.colorsValue === addCart.colorsValue);
+        
+        if(checkProduct = undefined) {
+            pushStorage();
+        } else {
+            checkProduct.quantityValue += addCart.quantityValue;
+            localStorage.setItem("products", JSON.stringify(checkStorage))
+        }
     } else {
+        console.log('le panier est vide')
         checkStorage = [];
-        checkStorage.push(addCart);
-        localStorage.setItem("products", JSON.stringify(checkStorage))
-        console.log(checkStorage);
+        pushStorage();
     }      
 }
 });
