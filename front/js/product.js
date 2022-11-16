@@ -69,53 +69,75 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
  */
 const button = document.querySelector('#addToCart');
 
-button.addEventListener('click', () => {
+button.addEventListener('click', function() {
     let colorsValue = document.querySelector('#colors').value;
     let quantityValue = document.querySelector('#quantity').value;
     
     if(colorsValue === "" || quantityValue <= 0) {
         alert('Veuillez renseigner la quantité et la couleur')
-    } else {
-        let addCart = [
-            productID,
-            colorsValue,
-            quantityValue
-        ]
-        console.log(addCart);
-/**
- * Local storage
- */
-let checkStorage = JSON.parse(localStorage.getItem("products"));
+    }
+    let addToCart = [
+        productID,
+        colorsValue,
+        quantityValue
+    ]
+    console.log(addToCart);
+    getProducts();
+
+    function addFirstProduct() {
+        listProducts = [];
+        listProducts.push(addToCart);
+        saveProducts(listProducts);
+    }
+
+    function getProducts() {
+        let listProducts = localStorage.getItem("listProducts");
+        if(listProducts == null) {
+            console.log("le panier est vide")
+            addFirstProduct();
+        } else {
+            return JSON.parse(listProducts);
+            searchSameProduct();
+        }
+    }
+
+    function saveProducts(listProducts) {
+        localStorage.setItem("listProducts", JSON.stringify(listProducts))
+    };
+
+    function searchSameProduct(listProducts) {
+        let checkProduct = listProducts.find(isSameProduct => isSameProduct.productID === addToCart.productID && isSameProduct.colorsValue === addToCart.colorsValue)
+        console.log(checkProduct);
+    }
+
+});
+
+/*let checkStorage = JSON.parse(localStorage.getItem("products"));
 console.log(checkStorage);
 
 function pushStorage() {
-    checkStorage.push(addCart);
+    checkStorage.push(addToCart);
     localStorage.setItem("products", JSON.stringify(checkStorage))
-    console.log(checkStorage);
+    console.log(`on pousse ${checkStorage}`);
 }
 
 if(checkStorage) {
     console.log('il y a quelque chose dans le panier')
-    const checkProduct = checkStorage.find(sameProduct =>
-        sameProduct.productID === addCart.productID
-        && sameProduct.colorsValue === addCart.colorsValue);
-        
-        if(checkProduct = undefined) {
-            pushStorage();
+    for (let i of checkStorage) {
+        if (addToCart.productID === i.id && addToCart.colorsValue === i.colorsValue) {
+            console.log('incrémentation');
+            i.quantityValue += addToCart.quantityValue;
+            console.log(checkStorage)
         } else {
-            checkProduct.quantityValue += addCart.quantityValue;
-            localStorage.setItem("products", JSON.stringify(checkStorage))
+            console.log('produit non présent');
+            pushStorage();
         }
-    } else {
+    }} else {
         console.log('le panier est vide')
         checkStorage = [];
         pushStorage();
     }      
-}
-});
-
-
-
+}*/
 
 /**
  * NOTE DE TRAVAIL
