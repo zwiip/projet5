@@ -105,7 +105,12 @@ button.addEventListener('click', function() {
             if(checkProduct) {
                 console.log("trouvé le même produit")
                 checkProduct.quantity += addToCart.quantity;
-                saveProducts(listProducts);
+                if(checkProduct.quantity > 100) {
+                    alert("impossible d'ajouter plus de 100 références dans le panier");
+                    return
+                } else {
+                    saveProducts(listProducts);
+                }
             } else {
                 console.log("pas le même produit");
                 addProduct(listProducts);
