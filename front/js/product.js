@@ -72,43 +72,60 @@ const button = document.querySelector('#addToCart');
 button.addEventListener('click', function() {
     let colorsValue = document.querySelector('#colors').value;
     let quantityValue = document.querySelector('#quantity').value;
+    console.log(typeof quantityValue);
     
     if(colorsValue === "" || quantityValue <= 0) {
         alert('Veuillez renseigner la quantité et la couleur')
     }
-    let addToCart = [
-        productID,
-        colorsValue,
-        quantityValue
-    ]
+    let addToCart = {
+        id: productID,
+        color: colorsValue,
+        quantity: Number(quantityValue)};
     console.log(addToCart);
     getProducts();
 
-    function addFirstProduct() {
-        listProducts = [];
-        listProducts.push(addToCart);
-        saveProducts(listProducts);
+    function getProducts() {
+        console.log("je regarde le panier")
+        let listProducts = JSON.parse(localStorage.getItem("listProducts") || '[]');
+        console.log("localStorage ",listProducts);
+        if(listProducts.length === 0) {
+            console.log("le panier est vide")
+            addProduct(listProducts);
+        } else {
+            console.log("il y a quelque chose dans le panier")
+            let checkProduct = listProducts.find(isSameProduct => isSameProduct.id === addToCart.id && isSameProduct.color === addToCart.color)
+            console.log(checkProduct);
+            if(checkProduct) {
+                console.log("trouvé le même produit")
+                checkProduct.quantity += addToCart.quantity;
+                saveProducts(listProducts);
+            } else {
+                console.log("pas le même produit");
+                addProduct(listProducts);
+            }
+        }
     }
 
-    function getProducts() {
-        let listProducts = localStorage.getItem("listProducts");
-        if(listProducts == null) {
-            console.log("le panier est vide")
-            addFirstProduct();
-        } else {
-            return JSON.parse(listProducts);
-            searchSameProduct();
-        }
+    function addProduct(listProducts) {
+        listProducts.push(addToCart);
+        saveProducts(listProducts);
     }
 
     function saveProducts(listProducts) {
         localStorage.setItem("listProducts", JSON.stringify(listProducts))
     };
 
-    function searchSameProduct(listProducts) {
-        let checkProduct = listProducts.find(isSameProduct => isSameProduct.productID === addToCart.productID && isSameProduct.colorsValue === addToCart.colorsValue)
+    /*function searchSameProduct(listProducts) {
+        let checkProduct = listProducts.find(isSameProduct => isSameProduct.id === addToCart.id && isSameProduct.color === addToCart.color)
         console.log(checkProduct);
-    }
+        if(checkProduct == undefined) {
+            listProducts.push(addToCart);
+            saveProducts();
+        } else {
+            isSameProduct.quantity += addToCart.quantity;
+            saveProducts();
+        }
+    }*/
 
 });
 
