@@ -90,7 +90,7 @@ function main() {
                     cartItemContentDescription.classList.add('cart__item__content__settings');
                     cartItemContent.append(cartItemContentSettings);
     
-                    // création du bloc quantité*/
+                    // création du bloc quantité
                     const cartItemContentSettingsQuantity = document.createElement('div');
                     cartItemContentSettingsQuantity.classList.add('cart__item__content__settings__quantity');
                     
@@ -109,8 +109,15 @@ function main() {
 
                     cartItemContentSettings.append(cartItemContentSettingsQuantity)                    
 
-
-
+                    // création du bloc de suppression
+                    const cartItemContentSettingsDelete = document.createElement('div');
+                    cartItemContentSettingsDelete.classList.add('cart__item__content__settings__delete');
+                    const pDeleteItem = document.createElement('p');
+                    pDeleteItem.classList.add('deleteItem');
+                    pDeleteItem.textContent = 'Supprimer';
+                    cartItemContentSettingsDelete.append(pDeleteItem);
+                    cartItemContentSettings.append(cartItemContentSettingsDelete);
+                    
                     cartItems.append(article);
                 }
             })
