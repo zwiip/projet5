@@ -77,7 +77,7 @@ function main() {
     
                     // affichage option couleur
                     const pColor = document.createElement('p');
-                    pColor.textContent = listProducts.color;
+                    pColor.textContent = listProducts[i].color;
                     cartItemContentDescription.append(pColor);
     
                     // affichage prix produit
@@ -91,8 +91,27 @@ function main() {
                     cartItemContent.append(cartItemContentSettings);
     
                     // création du bloc quantité*/
+                    const cartItemContentSettingsQuantity = document.createElement('div');
+                    cartItemContentSettingsQuantity.classList.add('cart__item__content__settings__quantity');
+                    
+                    const pQuantity = document.createElement('p');
+                    pQuantity.textContent = 'Qté : ';
+                    cartItemContentSettingsQuantity.append(pQuantity);
+                    
+                    const inputQuantity = document.createElement('input');
+                    inputQuantity.classList.add('itemQuantity')
+                    inputQuantity.setAttribute("type", "number")
+                    inputQuantity.setAttribute("name", "itemQuantity");
+                    inputQuantity.setAttribute("min", "1");
+                    inputQuantity.setAttribute("max", "100");
+                    inputQuantity.setAttribute("value", `${listProducts[i].quantity}`);
+                    cartItemContentSettingsQuantity.append(inputQuantity);
 
-                    cartItems.appendChild(article);
+                    cartItemContentSettings.append(cartItemContentSettingsQuantity)                    
+
+
+
+                    cartItems.append(article);
                 }
             })
             .catch(e => {
