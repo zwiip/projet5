@@ -82,7 +82,8 @@ button.addEventListener('click', function() {
     let addToCart = {
         id: productID,
         color: colorsValue,
-        quantity: Number(quantityValue)};
+        quantity: Number(quantityValue)
+    };
     console.log(addToCart);
     getProducts();
 
