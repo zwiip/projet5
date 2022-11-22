@@ -33,6 +33,7 @@ function main() {
                 }
             })
             .then((data) => {
+                console.log("je récupère mes données api", data)
                 addProductData(data);
             })
             .catch(e => {
@@ -41,12 +42,10 @@ function main() {
             
             function addProductData(data) {
                 for (i = 0; i < listProducts.length; i++) {
-                    console.log('je récupère bien data dans la boucle', data);
-                    //créer fonction avec parametre productData
-                    console.log('je récupère bien le local storage dans la boucle', listProducts)
+                    //console.log('je récupère bien data dans la boucle', data);                    
+                    //console.log('je récupère bien le local storage dans la boucle', listProducts)
                     let productData = data.find(sameID => sameID._id === listProducts[i].id);
-                    // filter à la place de find ?
-                    console.log("je récupère bien les deux tableaux du même produit", productData);
+                    console.log("je récupère les deux tableaux du même produit", productData);
 
                     // création du bloc article
                     const article = document.createElement('article');
@@ -111,8 +110,9 @@ function main() {
                     inputQuantity.setAttribute("min", "1");
                     inputQuantity.setAttribute("max", "100");
                     inputQuantity.setAttribute("value", `${listProducts[i].quantity}`);
-                    cartItemContentSettingsQuantity.append(inputQuantity);
                     inputQuantity.addEventListener('change', updateQuantity);
+                    cartItemContentSettingsQuantity.append(inputQuantity);
+                    
 
                     cartItemContentSettings.append(cartItemContentSettingsQuantity)                    
 
@@ -126,12 +126,22 @@ function main() {
                     cartItemContentSettings.append(cartItemContentSettingsDelete);
                     
                     cartItems.append(article);
+
+                    function updateQuantity(newInput, listProducts) {
+                        newInput = inputQuantity.value;
+                        console.log("je récupère ma nouvelle valeur :", newInput)
+                        if(newInput <= 0 || newInput > 100) {
+                            return alert('Veuillez sélectionner une quantité comprise entre 1 et 100 ou supprimer le produit');
+                        } else {
+                            listProducts[i].quantity = newInput;
+                            localStorage.setItem("listProducts", JSON.stringify(listProducts))
+                            console.log(listProducts)
+                        }
+                    }
                 }
             }
 
-                function updateQuantity(newinput) {
-                    console.log("voici ma nouvelle valeur", newinput.value);
-                };
+
 
 
     }
