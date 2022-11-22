@@ -2,7 +2,7 @@ function main() {
 
     // récupération des éléments stockés dans le local storage
     let listProducts = JSON.parse(localStorage.getItem("listProducts"));
-    console.log(listProducts);
+    console.log("je récupère mon local storage", listProducts);
     checkCartContent(listProducts);
 
     // vérification du contenus du panier
@@ -14,12 +14,10 @@ function main() {
             emptyCart.innerText = ('Votre panier est vide');
             cartItems.append(emptyCart);
         } else {
-            console.log("il y a quelque chose dans le panier")
+            console.log("il y a quelque chose dans le panier");
             displayCart(listProducts);
         }
     }
-
-
 
     // fonction pour créer et afficher les éléments du panier
     function displayCart() {
@@ -34,13 +32,21 @@ function main() {
                     throw new Error('Impossible de charger les données', { cause: res })
                 }
             })
-            .then(addProductData => {
+            .then((data) => {
+                addProductData(data);
+            })
+            .catch(e => {
+                console.error('une erreur est survenue', e)
+            });
+            
+            function addProductData(data) {
                 for (i = 0; i < listProducts.length; i++) {
+                    console.log('je récupère bien data dans la boucle', data);
                     //créer fonction avec parametre productData
-                    console.log('vérif dans then', listProducts)
-                    let productData = addProductData.find(sameID => sameID._id === listProducts[i].id);
+                    console.log('je récupère bien le local storage dans la boucle', listProducts)
+                    let productData = data.find(sameID => sameID._id === listProducts[i].id);
                     // filter à la place de find ?
-                    console.log(productData);
+                    console.log("je récupère bien les deux tableaux du même produit", productData);
 
                     // création du bloc article
                     const article = document.createElement('article');
@@ -106,6 +112,7 @@ function main() {
                     inputQuantity.setAttribute("max", "100");
                     inputQuantity.setAttribute("value", `${listProducts[i].quantity}`);
                     cartItemContentSettingsQuantity.append(inputQuantity);
+                    inputQuantity.addEventListener('change', updateQuantity);
 
                     cartItemContentSettings.append(cartItemContentSettingsQuantity)                    
 
@@ -120,10 +127,13 @@ function main() {
                     
                     cartItems.append(article);
                 }
-            })
-            .catch(e => {
-                console.error('une erreur est survenue', e)
-            })
+            }
+
+                function updateQuantity(newinput) {
+                    console.log("voici ma nouvelle valeur", newinput.value);
+                };
+
+
     }
 }
 
