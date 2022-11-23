@@ -110,7 +110,23 @@ function main() {
                     inputQuantity.setAttribute("min", "1");
                     inputQuantity.setAttribute("max", "100");
                     inputQuantity.setAttribute("value", `${listProducts[i].quantity}`);
-                    inputQuantity.addEventListener('change', updateQuantity);
+                    cartItemContentSettingsQuantity.addEventListener('change', updateQuantity => {
+                        if(inputQuantity.value <= 0 || inputQuantity.value > 100) {
+                            return alert('Veuillez sélectionner une quantité comprise entre 1 et 100 ou supprimer le produit');
+                        } else {
+                            console.log(listProducts)
+                            updateQuantity(listProducts);
+                        }
+                        function updateQuantity(listProducts) {
+                            let editedInputParent = inputQuantity.closest('article');
+                            let editedInputColor = editedInputParent.getAttribute("data-color")
+                            let editedInputID = editedInputParent.getAttribute("data-id")
+                            //console.log('vérif parent produit', editedInputParent, editedInputColor, editedInputID)
+                            let i = listProducts.findIndex(editInputProduct => editInputProduct.id == editedInputID && editInputProduct.color == editedInputColor);
+                            listProducts[i].quantity = inputQuantity.value;
+                            localStorage.setItem("listProducts", JSON.stringify(listProducts))
+                        }
+                    });
                     cartItemContentSettingsQuantity.append(inputQuantity);
                     
 
@@ -127,17 +143,7 @@ function main() {
                     
                     cartItems.append(article);
 
-                    function updateQuantity(newInput, listProducts) {
-                        newInput = inputQuantity.value;
-                        console.log("je récupère ma nouvelle valeur :", newInput)
-                        if(newInput <= 0 || newInput > 100) {
-                            return alert('Veuillez sélectionner une quantité comprise entre 1 et 100 ou supprimer le produit');
-                        } else {
-                            listProducts[i].quantity = newInput;
-                            localStorage.setItem("listProducts", JSON.stringify(listProducts))
-                            console.log(listProducts)
-                        }
-                    }
+                    
                 }
             }
 
