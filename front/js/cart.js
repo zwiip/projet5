@@ -4,10 +4,12 @@ function main() {
     let listProducts = JSON.parse(localStorage.getItem("listProducts"));
     console.log("je récupère mon local storage", listProducts);
     checkCartContent(listProducts);
+    calculateTotal();
+
 
     // vérification du contenus du panier
     function checkCartContent(listProducts) {
-        const cartItems = document.querySelector("#cart__items");
+        let cartItems = document.querySelector("#cart__items");
         if (listProducts == null || listProducts.length === 0) {
             console.log("le panier est vide");
             const emptyCart = document.createElement('p');
@@ -21,7 +23,7 @@ function main() {
 
     // fonction pour créer et afficher les éléments du panier
     function displayCart() {
-        const cartItems = document.querySelector("#cart__items");
+        cartItems = document.querySelector("#cart__items");
 
         // récupération des données de l'API
         fetch(`http://localhost:3000/api/products/`)
@@ -41,8 +43,6 @@ function main() {
             });
 
         function addProductData(data) {
-            let totalPrice = 0;
-            let totalQuantity = 0;
             for (i = 0; i < listProducts.length; i++) {
                 //console.log('je récupère bien data dans la boucle', data);                    
                 //console.log('je récupère bien le local storage dans la boucle', listProducts)
@@ -127,6 +127,7 @@ function main() {
                         let i = listProducts.findIndex(editInputProduct => editInputProduct.id == editedInputID && editInputProduct.color == editedInputColor);
                         listProducts[i].quantity = inputQuantity.value;
                         localStorage.setItem("listProducts", JSON.stringify(listProducts))
+                        calculateTotal();
                     }
                 });
                 cartItemContentSettingsQuantity.append(inputQuantity);
@@ -148,32 +149,65 @@ function main() {
                     let deletedProductParent = pDeleteItem.closest('article');
                     let deletedProductColor = deletedProductParent.getAttribute("data-color");
                     let deletedProductID = deletedProductParent.getAttribute("data-id");
-                    listProducts = listProducts.filter(deletedProduct => deletedProduct.id !== deletedProductID || deletedProduct.color !== deletedProductColor);
+                    listProducts = listProducts.filter(deletedProduct => deletedProduct.id !== deletedProductID && deletedProduct.color !== deletedProductColor);
                     localStorage.setItem("listProducts", JSON.stringify(listProducts));
                     deletedProductParent.remove();
                     alert('Le produit a été retiré du panier');
                     console.log(listProducts);
+                    calculateTotal();
                 };
 
                 cartItems.append(article);
-                calculateTotalQuantity();
-                calculateTotalPrice();
-
-                function calculateTotalQuantity() {
-                    totalQuantity += listProducts[i].quantity;
-                    document.querySelector('#totalQuantity').textContent = `${totalQuantity}`;
-                }
-
-                function calculateTotalPrice() {
-                    totalPrice += listProducts[i].quantity * productData.price;
-                    //console.log('prix total = ', totalPrice)
-                    document.querySelector('#totalPrice').textContent = `${totalPrice}`;
-                }
-
             }
         }
     }
+    function calculateTotal() {
+        listProducts = JSON.parse(localStorage.getItem("listProducts"));
+        let totalPrice = 0;
+        let totalQuantity = Number(0);
 
+        fetch(`http://localhost:3000/api/products/`)
+            .then(res => {
+                if (res.ok) {
+                    return res.json();
+                } else {
+                    throw new Error('Impossible de charger les données', { cause: res })
+                }
+            })
+            .then(newData => {
+                console.log("je récupère mes données api", newData)
+                for(let i = 0; i < listProducts.length; i++) {
+                    newProductData = newData.find(sameID => sameID._id === listProducts[i].id);
+                    totalQuantity += parseInt(listProducts[i].quantity);
+                    totalPrice += listProducts[i].quantity * newProductData.price;
+                    console.log(typeof(listProducts[i].quantity))
+                }
+                
+                console.log('prix total = ', totalPrice, 'quantité totale = ', totalQuantity)
+                document.querySelector('#totalPrice').textContent = `${totalPrice}`;
+                document.querySelector('#totalQuantity').textContent = `${totalQuantity}`;
+            })
+            .catch(e => {
+                console.error('une erreur est survenue', e)
+            });
+
+
+       
+
+
+
+
+    }
+/*    function calculateTotalQuantity() {
+        totalQuantity += listProducts[i].quantity;
+        document.querySelector('#totalQuantity').textContent = `${totalQuantity}`;
+    }
+
+    function calculateTotalPrice() {
+        totalPrice += listProducts[i].quantity * productData.price;
+        //console.log('prix total = ', totalPrice)
+        document.querySelector('#totalPrice').textContent = `${totalPrice}`;
+    }*/
 }
 
 main();
