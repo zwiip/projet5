@@ -180,12 +180,12 @@ function main() {
             })
             .then(newData => {
                 console.log("je récupère mes données api", newData)
-                for(let i = 0; i < listProducts.length; i++) {
+                for (let i = 0; i < listProducts.length; i++) {
                     newProductData = newData.find(sameID => sameID._id === listProducts[i].id);
                     totalQuantity += parseInt(listProducts[i].quantity);
                     totalPrice += listProducts[i].quantity * newProductData.price;
                 }
-                
+
                 console.log('prix total = ', totalPrice, 'quantité totale = ', totalQuantity)
                 document.querySelector('#totalPrice').textContent = `${totalPrice}`;
                 document.querySelector('#totalQuantity').textContent = `${totalQuantity}`;
@@ -196,81 +196,81 @@ function main() {
 
     }
     let btnSubmit = document.querySelector('#order');
-        btnSubmit.addEventListener('click', function(e) {
-            e.preventDefault();
+    btnSubmit.addEventListener('click', function (e) {
+        e.preventDefault();
 
-            let contact = {
-                firstName: document.querySelector('#firstName').value,
-                lastName: document.querySelector('#lastName').value,
-                address: document.querySelector('#address').value,
-                city: document.querySelector('#city').value,
-                email: document.querySelector('#email').value
-            };
-            let errorMsg = {
-                firstName: ('Merci de renseigner votre prénom'),
-                lastName: ('Merci de renseigner votre nom de famille'),
-                address: ('Merci de renseigner votre adresse'),
-                city: ('Merci de renseigner votre ville'),
-                email: ('Merci de renseigner un email valide')
-            };
+        let contact = {
+            firstName: document.querySelector('#firstName').value,
+            lastName: document.querySelector('#lastName').value,
+            address: document.querySelector('#address').value,
+            city: document.querySelector('#city').value,
+            email: document.querySelector('#email').value
+        };
+        let errorMsg = {
+            firstName: ('Merci de renseigner votre prénom'),
+            lastName: ('Merci de renseigner votre nom de famille'),
+            address: ('Merci de renseigner votre adresse'),
+            city: ('Merci de renseigner votre ville'),
+            email: ('Merci de renseigner un email valide')
+        };
 
-            let basicRegExp =  new RegExp("^[A-Za-zÀ-Öà-öø-ÿ\ \-]*$")
-            let numberRegExp = new RegExp("^[0-9A-Za-zÀ-Öà-öø-ÿ\ \-]*$")
-            let emailRegExp =  new RegExp("^[A-Za-z\.\-\_]+\@[A-Za-z]+\.[A-Za-z]{1,10}$")
+        let basicRegExp = new RegExp("^[A-Za-zÀ-Öà-öø-ÿ\ \-]*$")
+        let numberRegExp = new RegExp("^[0-9A-Za-zÀ-Öà-öø-ÿ\ \-]*$")
+        let emailRegExp = new RegExp("^[A-Za-z\.\-\_]+\@[A-Za-z]+\.[A-Za-z]{1,10}$")
 
-            console.log(contact);
+        console.log(contact);
 
-            if (contact.firstName == "") {
-                let firstNameErrorMsg = document.querySelector('#firstNameErrorMsg');
-                firstNameErrorMsg.textContent = errorMsg.firstName;
+        if (contact.firstName == "") {
+            let firstNameErrorMsg = document.querySelector('#firstNameErrorMsg');
+            firstNameErrorMsg.textContent = errorMsg.firstName;
 
-                return
-            } else if(basicRegExp.test(contact.firstName) == false) {
-                firstNameErrorMsg.textContent = ('Le champ prénom accepte des lettres, des tirets et des espaces uniquement');
-                return
-            }
+            return
+        } else if (basicRegExp.test(contact.firstName) == false) {
+            firstNameErrorMsg.textContent = ('Le champ prénom accepte des lettres, des tirets et des espaces uniquement');
+            return
+        }
 
-            if (contact.lastName == "") {
-                let lastNameErrorMsg = document.querySelector('#lastNameErrorMsg');
-                lastNameErrorMsg.textContent = errorMsg.lastName;
-                return
-            } else if(basicRegExp.test(contact.lastName) == false) {
-                lastNameErrorMsg.textContent = ('Le champ nom accepte des lettres, des tirets et des espaces uniquement');
-                return
-            }
+        if (contact.lastName == "") {
+            let lastNameErrorMsg = document.querySelector('#lastNameErrorMsg');
+            lastNameErrorMsg.textContent = errorMsg.lastName;
+            return
+        } else if (basicRegExp.test(contact.lastName) == false) {
+            lastNameErrorMsg.textContent = ('Le champ nom accepte des lettres, des tirets et des espaces uniquement');
+            return
+        }
 
-            if (contact.address == "") {
-                let addressErrorMsg = document.querySelector('#addressErrorMsg');
-                addressErrorMsg.textContent = errorMsg.address;
-                return
-            } else if(numberRegExp.test(contact.address) == false) {
-                addressErrorMsg.textContent = ('Le champ adresse accepte des lettres, des chiffres, des tirets et des espaces uniquement');
-                return
-            }
+        if (contact.address == "") {
+            let addressErrorMsg = document.querySelector('#addressErrorMsg');
+            addressErrorMsg.textContent = errorMsg.address;
+            return
+        } else if (numberRegExp.test(contact.address) == false) {
+            addressErrorMsg.textContent = ('Le champ adresse accepte des lettres, des chiffres, des tirets et des espaces uniquement');
+            return
+        }
 
-            if (contact.city == "") {
-                let cityErrorMsg = document.querySelector('#cityErrorMsg');
-                cityErrorMsg.textContent = errorMsg.city;
-                return
-            } else if(numberRegExp.test(contact.city) == false) {
-                cityErrorMsg.textContent = ('Le champ Ville accepte des lettres, des chiffres, des tirets et des espaces uniquement');
-                return
-            }
+        if (contact.city == "") {
+            let cityErrorMsg = document.querySelector('#cityErrorMsg');
+            cityErrorMsg.textContent = errorMsg.city;
+            return
+        } else if (numberRegExp.test(contact.city) == false) {
+            cityErrorMsg.textContent = ('Le champ Ville accepte des lettres, des chiffres, des tirets et des espaces uniquement');
+            return
+        }
 
-            if (contact.email == "") {
-                let emailErrorMsg = document.querySelector('#emailErrorMsg');
-                emailErrorMsg.textContent = errorMsg.email;
-                return
-            } else if(emailRegExp.test(contact.email) == false) {
-                emailErrorMsg.textContent = ('Veuillez entrer un email valide');
-                return
-            }
- 
-            sendOrder(contact);
-        })
+        if (contact.email == "") {
+            let emailErrorMsg = document.querySelector('#emailErrorMsg');
+            emailErrorMsg.textContent = errorMsg.email;
+            return
+        } else if (emailRegExp.test(contact.email) == false) {
+            emailErrorMsg.textContent = ('Veuillez entrer un email valide');
+            return
+        }
+
+        sendOrder(contact);
+    })
     function sendOrder(contact) {
         let products = [];
-        for(let i = 0; i < listProducts.length; i++) {
+        for (let i = 0; i < listProducts.length; i++) {
             products.push(listProducts[i].id);
         }
         const order = {
@@ -291,6 +291,11 @@ function main() {
             .then((res) => res.json())
             .then((postOrder) => {
                 console.log(postOrder)
+                localStorage.clear();
+                document.location.href = `confirmation.html?orderId=${postOrder.orderId}`
+            })
+            .catch((err) => {
+                console.log("problème avec l'envoi du formulaire")
             })
     }
 }
