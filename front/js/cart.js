@@ -192,7 +192,8 @@ function main() {
 
     }
     let btnSubmit = document.querySelector('#order');
-        btnSubmit.addEventListener('click', function(getForm) {
+        btnSubmit.addEventListener('click', function(e) {
+
             let formInputs = {
                 firstName: document.querySelector('#firstName').value,
                 lastName: document.querySelector('#lastName').value,
@@ -207,13 +208,40 @@ function main() {
                 city: ('Merci de renseigner votre ville'),
                 email: ('Merci de renseigner un email valide')
             };
+
+            let basicRegExp =  new RegExp("[A-Za-zÀ-ÖØ-öø-ÿ -]")
+
             console.log(formInputs);
 
             if (formInputs.firstName == "") {
-                getForm.preventDefault();
                 let firstNameErrorMsg = document.querySelector('#firstNameErrorMsg');
-                firstNameErrorMsg.textContent = ('Merci de remplir ce champ');
+                firstNameErrorMsg.textContent = errorMsg.firstName;
+                e.preventDefault();
+            } else if(basicRegExp.test(formInputs.firstName) == false) {
+                firstNameErrorMsg.textContent = ('Le champ prénom accepte des lettres, des tirets et des espaces uniquement');
+                e.preventDefault();
             }
+
+            if (formInputs.lastName == "") {
+                let lastNameErrorMsg = document.querySelector('#lastNameErrorMsg');
+                lastNameErrorMsg.textContent = errorMsg.lastName;
+            }
+
+            if (formInputs.address == "") {
+                let addressErrorMsg = document.querySelector('#addressErrorMsg');
+                addressErrorMsg.textContent = errorMsg.address;
+            }
+
+            if (formInputs.city == "") {
+                let cityErrorMsg = document.querySelector('#cityErrorMsg');
+                cityErrorMsg.textContent = errorMsg.city;
+            }
+
+            if (formInputs.email == "") {
+                let emailErrorMsg = document.querySelector('#emailErrorMsg');
+                emailErrorMsg.textContent = errorMsg.email;
+            }
+ 
 
         })
         
