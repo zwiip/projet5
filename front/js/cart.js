@@ -191,23 +191,25 @@ function main() {
                 console.error('une erreur est survenue', e)
             });
 
-
-       
-
-
-
-
     }
-/*    function calculateTotalQuantity() {
-        totalQuantity += listProducts[i].quantity;
-        document.querySelector('#totalQuantity').textContent = `${totalQuantity}`;
-    }
+    let btnSubmit = document.querySelector('#order');
+        btnSubmit.addEventListener('click', function(getForm) {
+            let formInputs = {
+                firstName: document.querySelector('#firstName'),
+                lastName: document.querySelector('#lastName'),
+                address: document.querySelector('#address'),
+                city: document.querySelector('#city'),
+                email: document.querySelector('#email')
+            };
 
-    function calculateTotalPrice() {
-        totalPrice += listProducts[i].quantity * productData.price;
-        //console.log('prix total = ', totalPrice)
-        document.querySelector('#totalPrice').textContent = `${totalPrice}`;
-    }*/
+            if (formInputs.firstName == "") {
+                getForm.preventDefault();
+                let firstNameErrorMsg = document.querySelector('#firstNameErrorMsg');
+                firstNameErrorMsg.textContent = ('Merci de remplir ce champ');
+            }
+
+        })
+        
 }
 
 main();
