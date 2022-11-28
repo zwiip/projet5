@@ -199,7 +199,7 @@ function main() {
         btnSubmit.addEventListener('click', function(e) {
             e.preventDefault();
 
-            let formInputs = {
+            let contact = {
                 firstName: document.querySelector('#firstName').value,
                 lastName: document.querySelector('#lastName').value,
                 address: document.querySelector('#address').value,
@@ -214,62 +214,84 @@ function main() {
                 email: ('Merci de renseigner un email valide')
             };
 
-            let basicRegExp =  new RegExp("^[A-Za-zÀ-Öà-öø-ÿ\ \-]$")
-            let numberRegExp = new RegExp("^[A-Za-zÀ-Öà-öø-ÿ\ \-0-9]$")
+            let basicRegExp =  new RegExp("^[A-Za-zÀ-Öà-öø-ÿ\ \-]*$")
+            let numberRegExp = new RegExp("^[0-9A-Za-zÀ-Öà-öø-ÿ\ \-]*$")
             let emailRegExp =  new RegExp("^[A-Za-z\.\-\_]+\@[A-Za-z]+\.[A-Za-z]{1,10}$")
 
-            console.log(formInputs);
+            console.log(contact);
 
-            if (formInputs.firstName == "") {
+            if (contact.firstName == "") {
                 let firstNameErrorMsg = document.querySelector('#firstNameErrorMsg');
                 firstNameErrorMsg.textContent = errorMsg.firstName;
 
                 return
-            } else if(basicRegExp.test(formInputs.firstName) == false) {
+            } else if(basicRegExp.test(contact.firstName) == false) {
                 firstNameErrorMsg.textContent = ('Le champ prénom accepte des lettres, des tirets et des espaces uniquement');
                 return
             }
 
-            if (formInputs.lastName == "") {
+            if (contact.lastName == "") {
                 let lastNameErrorMsg = document.querySelector('#lastNameErrorMsg');
                 lastNameErrorMsg.textContent = errorMsg.lastName;
                 return
-            } else if(basicRegExp.test(formInputs.lastName) == false) {
+            } else if(basicRegExp.test(contact.lastName) == false) {
                 lastNameErrorMsg.textContent = ('Le champ nom accepte des lettres, des tirets et des espaces uniquement');
                 return
             }
 
-            if (formInputs.address == "") {
+            if (contact.address == "") {
                 let addressErrorMsg = document.querySelector('#addressErrorMsg');
                 addressErrorMsg.textContent = errorMsg.address;
                 return
-            } else if(numberRegExp.test(formInputs.address) == false) {
+            } else if(numberRegExp.test(contact.address) == false) {
                 addressErrorMsg.textContent = ('Le champ adresse accepte des lettres, des chiffres, des tirets et des espaces uniquement');
                 return
             }
 
-            if (formInputs.city == "") {
+            if (contact.city == "") {
                 let cityErrorMsg = document.querySelector('#cityErrorMsg');
                 cityErrorMsg.textContent = errorMsg.city;
                 return
-            } else if(numberRegExp.test(formInputs.city) == false) {
+            } else if(numberRegExp.test(contact.city) == false) {
                 cityErrorMsg.textContent = ('Le champ Ville accepte des lettres, des chiffres, des tirets et des espaces uniquement');
                 return
             }
 
-            if (formInputs.email == "") {
+            if (contact.email == "") {
                 let emailErrorMsg = document.querySelector('#emailErrorMsg');
                 emailErrorMsg.textContent = errorMsg.email;
                 return
-            } else if(emailRegExp.test(formInputs.email) == false) {
+            } else if(emailRegExp.test(contact.email) == false) {
                 emailErrorMsg.textContent = ('Veuillez entrer un email valide');
                 return
             }
  
-            sendOrder();
+            sendOrder(contact);
         })
-    function sendOrder() {
-        console.log('envoyer la commande')
+    function sendOrder(contact) {
+        let products = [];
+        for(let i = 0; i < listProducts.length; i++) {
+            products.push(listProducts[i].id);
+        }
+        const order = {
+            contact,
+            products
+        };
+        console.log('commande posée', order);
+
+        let options = {
+            method: 'POST',
+            body: JSON.stringify(order),
+            headers: {
+                "Content-Type": "application/json"
+            }
+        };
+
+        fetch('http://localhost:3000/api/products/order', options)
+            .then((res) => res.json())
+            .then((postOrder) => {
+                console.log(postOrder)
+            })
     }
 }
 
