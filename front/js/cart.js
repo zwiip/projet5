@@ -180,7 +180,6 @@ function main() {
                     newProductData = newData.find(sameID => sameID._id === listProducts[i].id);
                     totalQuantity += parseInt(listProducts[i].quantity);
                     totalPrice += listProducts[i].quantity * newProductData.price;
-                    console.log(typeof(listProducts[i].quantity))
                 }
                 
                 console.log('prix total = ', totalPrice, 'quantité totale = ', totalQuantity)
@@ -195,12 +194,20 @@ function main() {
     let btnSubmit = document.querySelector('#order');
         btnSubmit.addEventListener('click', function(getForm) {
             let formInputs = {
-                firstName: document.querySelector('#firstName'),
-                lastName: document.querySelector('#lastName'),
-                address: document.querySelector('#address'),
-                city: document.querySelector('#city'),
-                email: document.querySelector('#email')
+                firstName: document.querySelector('#firstName').value,
+                lastName: document.querySelector('#lastName').value,
+                address: document.querySelector('#address').value,
+                city: document.querySelector('#city').value,
+                email: document.querySelector('#email').value
             };
+            let errorMsg = {
+                firstName: ('Merci de renseigner votre prénom'),
+                lastName: ('Merci de renseigner votre nom de famille'),
+                address: ('Merci de renseigner votre adresse'),
+                city: ('Merci de renseigner votre ville'),
+                email: ('Merci de renseigner un email valide')
+            };
+            console.log(formInputs);
 
             if (formInputs.firstName == "") {
                 getForm.preventDefault();
