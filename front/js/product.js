@@ -3,30 +3,41 @@
  * -----------------------------------------------------------------------
  */
 
-/**
- * Permet de récuperer des informations concernant l'URL actuelle de la fenêtre
- */
+function main() {
+    /**
+     * Permet de récuperer des informations concernant l'URL actuelle de la fenêtre
+     */
 
-const searchURL = window.location.search;
-console.log(searchURL);
+    const searchURL = window.location.search;
+    console.log(searchURL);
 
-const getID = new URLSearchParams(searchURL);
-console.log(getID);
+    const getID = new URLSearchParams(searchURL);
+    console.log(getID);
 
-const productID = getID.get('id')
+    const productID = getID.get('id')
 
-/** 
- * Permet d'afficher le bon produit selon son ID en modifiant l'id dans l'appel de l'API
- */
-let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
-    pageProduct.then(function(res) {
+    /**
+     * Appel de l'API selon l'id du produit sélectionné
+     */
+    let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
+    pageProduct.then(function (res) {
         if (res.ok) {
             return res.json();
         }
     })
-    .then(function(productData) {
-        console.log(productData);
-        
+        .then(function (productData) {
+            console.log(productData);
+            displayProductData(productData);
+        })
+        .catch(function (err) {
+            console.log("impossible de charger la page produit", err)
+        });
+
+    /**
+     * Permet d'afficher dynamiquement les données produit dans les différents bloc de la page
+     * @param {*} productData données détaillée du produit récupérée par l'API
+     */
+    function displayProductData(productData) {
         const productImg = document.createElement('img');
         productImg.src = productData.imageUrl;
         productImg.alt = productData.altTxt;
@@ -42,56 +53,56 @@ let pageProduct = fetch(`http://localhost:3000/api/products/${productID}`);
         const productDescription = productData.description;
         document.querySelector('#description').textContent = `${productDescription}`;
 
-/**
- * Permet de parcourir le tableau contenant les couleurs du produit et créer une option pour chacune.
- */
+        /**
+        * Permet de parcourir le tableau contenant les couleurs du produit et créer une option pour chacune.
+        */
         const productColors = productData.colors;
-        function getColors(productColors) {
-            for (let i = 0; i < productColors.length; i++) {
-                const option = document.createElement("option");
-                option.value = productColors[i];
-                option.textContent = productColors[i];
-                document.querySelector('#colors').append(option);
-            }
+        for (let i = 0; i < productColors.length; i++) {
+            const option = document.createElement("option");
+            option.value = productColors[i];
+            option.textContent = productColors[i];
+            document.querySelector('#colors').append(option);
         }
-        getColors(productColors);    
-    })
-/**
- * Permet de signaler si une erreur est apparue dans les fonctions précédentes
- */
-    .catch(function(err) {
-        console.log("impossible de charger la page produit")
+    }
+
+    /** -----------------------------------------------------
+    * Gestion du panier
+    * ------------------------------------------------------
+    */
+    const button = document.querySelector('#addToCart');
+
+    /**
+     * Permet d'écouter le click du bouton "ajouter au panier"
+     * Vérifie si les données récupérées sont correctes pour déclencher l'ajout au panier ou d'alerter le cas échéant
+     */
+    button.addEventListener('click', function () {
+        let colorsValue = document.querySelector('#colors').value;
+        let quantityValue = Number(document.querySelector('#quantity').value);
+        console.log(typeof quantityValue);
+
+        if (colorsValue === "" || quantityValue <= 0 || quantityValue > 100) {
+            alert('Veuillez renseigner une couleur et une quantité entre 1 et 100')
+            return
+        }
+
+        let addToCart = {
+            id: productID,
+            color: colorsValue,
+            quantity: Number(quantityValue)
+        };
+        console.log(addToCart);
+        getProducts();
+
     });
 
-/** -----------------------------------------------------
- * Gestion du panier
- * ------------------------------------------------------
- */
-const button = document.querySelector('#addToCart');
-
-button.addEventListener('click', function() {
-    let colorsValue = document.querySelector('#colors').value;
-    let quantityValue = document.querySelector('#quantity').value;
-    console.log(typeof quantityValue);
-    
-    if(colorsValue === "" || quantityValue <= 0 || quantityValue > 100) {
-        alert('Veuillez renseigner une couleur et une quantité entre 1 et 100')
-        return
-    }
- 
-    let addToCart = {
-        id: productID,
-        color: colorsValue,
-        quantity: Number(quantityValue)
-    };
-    console.log(addToCart);
-    getProducts();
-
+    /**
+     * Permet de vérifier le contenu du panier afin de créer le tableau du panier, ou l'objet ou d'incrémenter l'objet existant
+     */
     function getProducts() {
         console.log("je regarde le panier")
         let listProducts = JSON.parse(localStorage.getItem("listProducts") || '[]');
-        console.log("localStorage ",listProducts);
-        if(listProducts.length === 0) {
+        console.log("localStorage ", listProducts);
+        if (listProducts.length === 0) {
             console.log("le panier est vide")
             addProduct(listProducts);
         } else {
@@ -100,33 +111,51 @@ button.addEventListener('click', function() {
         }
     }
 
+    /**
+     * Permet de chercher si le produit rajouté est déjà présent dans le panier
+     * si oui --> incrémentation de la quantité
+     * si non --> création de l'objet
+     * @param {*} listProducts liste des produits du local storage
+     * @returns 
+     */
     function searchSameProduct(listProducts) {
         let checkProduct = listProducts.find(isSameProduct => isSameProduct.id === addToCart.id && isSameProduct.color === addToCart.color)
-            console.log(checkProduct);
-            if(checkProduct) {
-                console.log("trouvé le même produit")
-                checkProduct.quantity += addToCart.quantity;
-                if(checkProduct.quantity > 100) {
-                    alert("impossible d'ajouter plus de 100 références dans le panier");
-                    return
-                } else {
-                    saveProducts(listProducts);
-                }
+        console.log(checkProduct);
+        if (checkProduct) {
+            parseInt(checkProduct.quantity += addToCart.quantity);
+            console.log("trouvé le même produit, je vérifie la quantité totale")
+            if (checkProduct.quantity > 100) {
+                alert("impossible d'ajouter plus de 100 références dans le panier");
+                return
             } else {
-                console.log("pas le même produit");
-                addProduct(listProducts);
+                saveProducts(listProducts);
+                console.log("c'est bon c'est incrémenté", listProducts)
             }
+        } else {
+            console.log("pas le même produit, donc création de la référence");
+            addProduct(listProducts);
+        }
     }
 
+    /**
+     * ajoute le produit au panier
+     * @param {*} listProducts liste des produits dans le local storage
+     */
     function addProduct(listProducts) {
         listProducts.push(addToCart);
         saveProducts(listProducts);
     }
 
+    /**
+     * Met à jour le local storage
+     * @param {*} listProducts liste des produits du local storage
+     */
     function saveProducts(listProducts) {
         localStorage.setItem("listProducts", JSON.stringify(listProducts))
     };
-});
+}
+
+main();
 
 /**
  * NOTE DE TRAVAIL
