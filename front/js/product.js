@@ -3,7 +3,6 @@
  * -----------------------------------------------------------------------
  */
 
-function main() {
     /**
      * Permet de récuperer des informations concernant l'URL actuelle de la fenêtre
      */
@@ -77,8 +76,7 @@ function main() {
      */
     button.addEventListener('click', function () {
         let colorsValue = document.querySelector('#colors').value;
-        let quantityValue = Number(document.querySelector('#quantity').value);
-        console.log(typeof quantityValue);
+        let quantityValue = document.querySelector('#quantity').value;
 
         if (colorsValue === "" || quantityValue <= 0 || quantityValue > 100) {
             alert('Veuillez renseigner une couleur et une quantité entre 1 et 100')
@@ -90,9 +88,8 @@ function main() {
             color: colorsValue,
             quantity: Number(quantityValue)
         };
-        console.log(addToCart);
-        getProducts();
-
+        console.log(typeof addToCart.quantity);
+        getProducts(addToCart);
     });
 
     /**
@@ -128,7 +125,7 @@ function main() {
                 alert("impossible d'ajouter plus de 100 références dans le panier");
                 return
             } else {
-                saveProducts(listProducts);
+                localStorage.setItem("listProducts", JSON.stringify(listProducts))
                 console.log("c'est bon c'est incrémenté", listProducts)
             }
         } else {
@@ -143,19 +140,13 @@ function main() {
      */
     function addProduct(listProducts) {
         listProducts.push(addToCart);
-        saveProducts(listProducts);
+        localStorage.setItem("listProducts", JSON.stringify(listProducts))
     }
 
     /**
      * Met à jour le local storage
      * @param {*} listProducts liste des produits du local storage
      */
-    function saveProducts(listProducts) {
-        localStorage.setItem("listProducts", JSON.stringify(listProducts))
-    };
-}
-
-main();
 
 /**
  * NOTE DE TRAVAIL
