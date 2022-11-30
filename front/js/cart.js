@@ -6,6 +6,7 @@
 
 /**
  * Permet de récupérer les éléments stockés dans le local storage
+ * @return {{id: string, color: string, quantity: number}[]}
  */
 let listProducts = JSON.parse(localStorage.getItem("listProducts"));
 /*listProducts.sort(function (a,b) {
@@ -14,7 +15,8 @@ let listProducts = JSON.parse(localStorage.getItem("listProducts"));
 console.log("je récupère mon local storage", listProducts);
 
 /**
- Récupération des données API et vérification du panier
+ * Récupération des données API et vérification de s'il y a quelque chose dans le panier
+ * @return {{_id: string, altTxt: string, colors: string[], description: string, imageUrl: string, name: string, price: number}[]}
  */
 fetch(`http://localhost:3000/api/products/`)
  .then(res => {
@@ -42,6 +44,11 @@ fetch(`http://localhost:3000/api/products/`)
      console.error('une erreur est survenue', e)
  });
 
+ /**
+  * Permet d'afficher le résumé du contenus du panier
+  * @param {Array} data la liste des données produits (API)
+  * @param {Array} listProducts la liste du contenu de mon panier
+  */
 function addProductData(data, listProducts) {
     cartItems = document.querySelector("#cart__items");
     for (i = 0; i < listProducts.length; i++) {
@@ -113,6 +120,9 @@ function addProductData(data, listProducts) {
         inputQuantity.setAttribute("min", "1");
         inputQuantity.setAttribute("max", "100");
         inputQuantity.setAttribute("value", `${listProducts[i].quantity}`);
+        /**
+         * Permet de modifier la quantité d'un produit en vérifiant au préalable la quantité totale
+         */
         cartItemContentSettingsQuantity.addEventListener('change', updateQuantity => {
             if (inputQuantity.value <= 0 || inputQuantity.value > 100) {
                 return alert('Veuillez sélectionner une quantité comprise entre 1 et 100 ou supprimer le produit');
@@ -141,6 +151,9 @@ function addProductData(data, listProducts) {
         pDeleteItem.textContent = 'Supprimer';
         cartItemContentSettingsDelete.append(pDeleteItem);
         cartItemContentSettings.append(cartItemContentSettingsDelete);
+        /**
+         * Permet de supprimer un produit et de mettre à jour le résumé du panier, le local storage et le total prix / quantité
+         */
         cartItemContentSettingsDelete.addEventListener('click', deleteProductFromCart => {
             listProducts = JSON.parse(localStorage.getItem("listProducts"));
             console.log(listProducts, 'avant suppression')
@@ -160,6 +173,11 @@ function addProductData(data, listProducts) {
     }
 }
 
+/**
+ * Permet de calculer le total prix et quantité
+ * @param {Array} data la liste des données produits (API)
+ * @param {Array} listProducts la liste du contenu de mon panier
+ */
 function calculateTotal(data, listProducts) {
     let totalPrice = 0;
     let totalQuantity = Number(0);
@@ -180,6 +198,10 @@ function calculateTotal(data, listProducts) {
  *  Gestion formulaire
  * ---------------------------------------
  */
+
+/**
+ * Permet d'écouter le clic du bouton, de récupérer les inputs de contact et de valider les données saisies
+ */
 let btnSubmit = document.querySelector('#order');
 btnSubmit.addEventListener('click', function (e) {
     e.preventDefault();
@@ -191,6 +213,7 @@ btnSubmit.addEventListener('click', function (e) {
         city: document.querySelector('#city').value,
         email: document.querySelector('#email').value
     };
+
     let errorMsg = {
         firstName: ('Merci de renseigner votre prénom'),
         lastName: ('Merci de renseigner votre nom de famille'),
@@ -254,6 +277,10 @@ btnSubmit.addEventListener('click', function (e) {
     sendOrder(contact);
 })
 
+/**
+ * Permet de créer l'objet à envoyer à l'API pour passer la commande
+ * @param {object} contact inputs saisies et précédemment controlées 
+ */
 function sendOrder(contact) {
     let products = [];
     for (let i = 0; i < listProducts.length; i++) {
