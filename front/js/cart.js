@@ -14,10 +14,9 @@ let listProducts = JSON.parse(localStorage.getItem("listProducts"));
 console.log("je récupère mon local storage", listProducts);
 
 /**
- Récupération des données API
+ Récupération des données API et vérification du panier
  */
-
- const productsAPI = fetch(`http://localhost:3000/api/products/`)
+fetch(`http://localhost:3000/api/products/`)
  .then(res => {
      if (res.ok) {
          return res.json();
@@ -27,38 +26,29 @@ console.log("je récupère mon local storage", listProducts);
  })
  .then((data) => {
      console.log("je récupère mes données api", data)
-     checkCartContent();
+     let cartItems = document.querySelector("#cart__items");
+     if (listProducts == null || listProducts.length === 0) {
+         console.log("le panier est vide");
+         const emptyCart = document.createElement('p');
+         emptyCart.innerText = ('Votre panier est vide');
+         cartItems.append(emptyCart);
+     } else {
+         console.log("il y a quelque chose dans le panier");
+         calculateTotal(data, listProducts);
+         addProductData(data, listProducts)
+     }
  })
  .catch(e => {
      console.error('une erreur est survenue', e)
  });
 
-/**
- * Vérification du panier pour savoir s'il contient quelque chose
- * @param {*} listProducts liste des produits dans le local storage
- */
-function checkCartContent(listProducts) {
-    let cartItems = document.querySelector("#cart__items");
-    if (listProducts == null || listProducts.length === 0) {
-        console.log("le panier est vide");
-        const emptyCart = document.createElement('p');
-        emptyCart.innerText = ('Votre panier est vide');
-        cartItems.append(emptyCart);
-    } else {
-        console.log("il y a quelque chose dans le panier");
-        addProductData(listProducts)
-    }
-}
-
-function addProductData(productsAPI) {
-
-    console.log('est-ce que les données api arrivent dans ma fonction', productsAPI)
+function addProductData(data, listProducts) {
     cartItems = document.querySelector("#cart__items");
     for (i = 0; i < listProducts.length; i++) {
         //console.log('je récupère bien data dans la boucle', data);                    
         //console.log('je récupère bien le local storage dans la boucle', listProducts)
-        let productData = productsAPI.find(sameID => sameID._id === listProducts[i].id);
-        console.log("je récupère les deux tableaux du même produit", productData);
+        let productData = data.find(sameID => sameID._id === listProducts[i].id);
+        //console.log("je récupère les deux tableaux du même produit", productData);
 
         // création du bloc article
         const article = document.createElement('article');
@@ -136,7 +126,7 @@ function addProductData(productsAPI) {
                 let i = listProducts.findIndex(editInputProduct => editInputProduct.id == editedInputID && editInputProduct.color == editedInputColor);
                 listProducts[i].quantity = inputQuantity.value;
                 localStorage.setItem("listProducts", JSON.stringify(listProducts))
-                calculateTotal();
+                calculateTotal(data, listProducts);
             }
         });
 
@@ -162,47 +152,20 @@ function addProductData(productsAPI) {
             localStorage.setItem("listProducts", JSON.stringify(listProducts));
             deletedProductParent.remove();
             alert('Le produit a été retiré du panier');
-            console.log(listProducts);
-            calculateTotal();
+            console.log(listProducts, 'après suppression');
+            calculateTotal(data, listProducts);
         });
 
         cartItems.append(article);
     }
 }
 
-calculateTotal();
-
-function calculateTotal() {
+function calculateTotal(data, listProducts) {
     let totalPrice = 0;
     let totalQuantity = Number(0);
-    console.log("est-ce que je reçois l'api dans calcul total", productsAPI)
 
-   /* fetch(`http://localhost:3000/api/products/`)
-        .then(res => {
-            if (res.ok) {
-                return res.json();
-            } else {
-                throw new Error('Impossible de charger les données', { cause: res })
-            }
-        })
-        .then(newData => {
-            console.log("je récupère mes données api", newData)
-            for (let i = 0; i < listProducts.length; i++) {
-                newProductData = newData.find(sameID => sameID._id === listProducts[i].id);
-                totalQuantity += parseInt(listProducts[i].quantity);
-                totalPrice += listProducts[i].quantity * newProductData.price;
-            }
-
-            console.log('prix total = ', totalPrice, 'quantité totale = ', totalQuantity)
-            document.querySelector('#totalPrice').textContent = `${totalPrice}`;
-            document.querySelector('#totalQuantity').textContent = `${totalQuantity}`;
-        })
-        .catch(e => {
-            console.error('une erreur est survenue', e)
-        });*/
         for (let i = 0; i < listProducts.length; i++) {
-            console.log("je vérifie que j'attrape bien l'api dans la boucle de find", productsAPI)
-            let newProductData = productsAPI.find(sameID => sameID._id === listProducts[i].id);
+            let newProductData = data.find(sameID => sameID._id === listProducts[i].id);
             totalQuantity += parseInt(listProducts[i].quantity);
             totalPrice += listProducts[i].quantity * newProductData.price;
         }
@@ -318,6 +281,6 @@ function sendOrder(contact) {
             document.location.href = `confirmation.html?orderId=${postOrder.orderId}`
         })
         .catch((err) => {
-            console.log("problème avec l'envoi du formulaire")
+            console.log("problème avec l'envoi du formulaire", err)
         })
 }

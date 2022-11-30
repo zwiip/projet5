@@ -111,7 +111,7 @@ function getProducts() {
  * si non --> création de l'objet
  */
         let checkProduct = listProducts.find(isSameProduct => isSameProduct.id === addedProduct.id && isSameProduct.color === addedProduct.color)
-        console.log(checkProduct, listProducts);
+        console.log(checkProduct);
         if (checkProduct) {
             parseInt(checkProduct.quantity += addedProduct.quantity);
             console.log("trouvé le même produit, je vérifie la quantité totale")
@@ -124,7 +124,7 @@ function getProducts() {
             }
         } else {
             console.log("pas le même produit, donc création de la référence");
-            addProduct(listProducts);
+            addProduct(listProducts, addedProduct);
         }
     }
 }
