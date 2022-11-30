@@ -5,13 +5,19 @@
  */
 
 /**
- * Permet de récupérer les éléments stockés dans le local storage
+ * Permet de récupérer les éléments stockés dans le local storage et de les trier par l'id
  * @return {{id: string, color: string, quantity: number}[]}
  */
 let listProducts = JSON.parse(localStorage.getItem("listProducts"));
-/*listProducts.sort(function (a,b) {
-        return a.id - b.id;
-    })*/
+    listProducts = listProducts.sort(function (a,b) {
+        if(a.id < b.id) {
+            return -1;
+        }
+        if(a.id > b.id) {
+            return 1;
+        }
+        return 0;
+})
 console.log("je récupère mon local storage", listProducts);
 
 /**
@@ -51,6 +57,7 @@ fetch(`http://localhost:3000/api/products/`)
   */
 function addProductData(data, listProducts) {
     cartItems = document.querySelector("#cart__items");
+
     for (i = 0; i < listProducts.length; i++) {
         //console.log('je récupère bien data dans la boucle', data);                    
         //console.log('je récupère bien le local storage dans la boucle', listProducts)
