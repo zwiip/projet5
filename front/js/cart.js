@@ -9,52 +9,52 @@
  * @return {{id: string, color: string, quantity: number}[]}
  */
 let listProducts = JSON.parse(localStorage.getItem("listProducts"));
-    listProducts = listProducts.sort(function (a,b) {
-        if(a.id < b.id) {
-            return -1;
-        }
-        if(a.id > b.id) {
-            return 1;
-        }
-        return 0;
-})
 console.log("je récupère mon local storage", listProducts);
+
+let totalPrice = 0;
+let totalQuantity = Number(0);
 
 /**
  * Récupération des données API et vérification de s'il y a quelque chose dans le panier
  * @return {{_id: string, altTxt: string, colors: string[], description: string, imageUrl: string, name: string, price: number}[]}
  */
 fetch(`http://localhost:3000/api/products/`)
- .then(res => {
-     if (res.ok) {
-         return res.json();
-     } else {
-         throw new Error('Impossible de charger les données', { cause: res })
-     }
- })
- .then((data) => {
-     console.log("je récupère mes données api", data)
-     let cartItems = document.querySelector("#cart__items");
-     if (listProducts == null || listProducts.length === 0) {
-         console.log("le panier est vide");
-         const emptyCart = document.createElement('p');
-         emptyCart.innerText = ('Votre panier est vide');
-         cartItems.append(emptyCart);
-     } else {
-         console.log("il y a quelque chose dans le panier");
-         calculateTotal(data, listProducts);
-         addProductData(data, listProducts)
-     }
- })
- .catch(e => {
-     console.error('une erreur est survenue', e)
- });
+    .then(res => {
+        if (res.ok) {
+            return res.json();
+        } else {
+            throw new Error('Impossible de charger les données', { cause: res })
+        }
+    })
+    .then((data) => {
+        console.log("je récupère mes données api", data)
+        let cartItems = document.querySelector("#cart__items");
+        if (listProducts == null || listProducts.length === 0) {
+            calculateTotal(data, listProducts);
+        } else {
+            console.log("il y a quelque chose dans le panier");
+            listProducts = listProducts.sort(function (a, b) {
+                if (a.id < b.id) {
+                    return -1;
+                }
+                if (a.id > b.id) {
+                    return 1;
+                }
+                return 0;
+            })
+            calculateTotal(data, listProducts);
+            addProductData(data, listProducts)
+        }
+    })
+    .catch(e => {
+        console.error('une erreur est survenue', e)
+    });
 
- /**
-  * Permet d'afficher le résumé du contenus du panier
-  * @param {Array} data la liste des données produits (API)
-  * @param {Array} listProducts la liste du contenu de mon panier
-  */
+/**
+ * Permet d'afficher le résumé du contenus du panier
+ * @param {Array} data la liste des données produits (API)
+ * @param {Array} listProducts la liste du contenu de mon panier
+ */
 function addProductData(data, listProducts) {
     cartItems = document.querySelector("#cart__items");
 
@@ -186,18 +186,25 @@ function addProductData(data, listProducts) {
  * @param {Array} listProducts la liste du contenu de mon panier
  */
 function calculateTotal(data, listProducts) {
-    let totalPrice = 0;
-    let totalQuantity = Number(0);
-
+    if (listProducts == null || listProducts.length === 0) {
+        console.log("le panier est vide");
+        cartItems = document.querySelector("#cart__items");
+        const emptyCart = document.createElement('p');
+        emptyCart.innerText = ('Votre panier est vide');
+        cartItems.append(emptyCart);
+        totalPrice = 0;
+        totalQuantity = 0;
+    } else {
         for (let i = 0; i < listProducts.length; i++) {
             let newProductData = data.find(sameID => sameID._id === listProducts[i].id);
             totalQuantity += parseInt(listProducts[i].quantity);
             totalPrice += listProducts[i].quantity * newProductData.price;
-        }
-
-        console.log('prix total = ', totalPrice, 'quantité totale = ', totalQuantity)
-        document.querySelector('#totalPrice').textContent = `${totalPrice}`;
-        document.querySelector('#totalQuantity').textContent = `${totalQuantity}`;
+        }    
+    }
+    
+    console.log('prix total = ', totalPrice, 'quantité totale = ', totalQuantity)
+    document.querySelector('#totalPrice').textContent = `${totalPrice}`;
+    document.querySelector('#totalQuantity').textContent = `${totalQuantity}`;
 }
 
 /**
@@ -211,6 +218,10 @@ function calculateTotal(data, listProducts) {
  */
 let btnSubmit = document.querySelector('#order');
 btnSubmit.addEventListener('click', function (e) {
+    if (totalQuantity === 0) {
+        window.alert('Impossible de passer une commande si votre panier est vide')
+        return
+    }
     e.preventDefault();
 
     let contact = {
