@@ -121,6 +121,13 @@ function getProducts() {
             } else {
                 localStorage.setItem("listProducts", JSON.stringify(listProducts))
                 console.log("c'est bon c'est incrémenté", listProducts)
+                const confirmNewQuantity = window.confirm(
+                    `Mise à jour de la quantité du produit déjà présent dans le panier ! 
+                    OK pour voir votre panier
+                    Annuler pour continuer vos achats.`)
+                if(confirmNewQuantity) {
+                    window.location.href = 'cart.html'
+                }
             }
         } else {
             console.log("pas le même produit, donc création de la référence");
@@ -137,6 +144,13 @@ function addProduct(listProducts, addedProduct) {
     listProducts.push(addedProduct);
     localStorage.setItem("listProducts", JSON.stringify(listProducts))
     console.log("nouveau panier", listProducts)
+    const confirmAdd = window.confirm(
+        `Produit ajouté ! 
+        OK pour voir votre panier
+        Annuler pour continuer vos achats.`)
+    if(confirmAdd) {
+        window.location.href = 'cart.html'
+    }
 }
 
 
