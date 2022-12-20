@@ -186,14 +186,15 @@ function addProductData(data, listProducts) {
  * @param {Array} listProducts la liste du contenu de mon panier
  */
 function calculateTotal(data, listProducts) {
+    totalPrice = 0;
+    totalQuantity = 0;
     if (listProducts == null || listProducts.length === 0) {
         console.log("le panier est vide");
         cartItems = document.querySelector("#cart__items");
         const emptyCart = document.createElement('p');
         emptyCart.innerText = ('Votre panier est vide');
         cartItems.append(emptyCart);
-        totalPrice = 0;
-        totalQuantity = 0;
+
     } else {
         for (let i = 0; i < listProducts.length; i++) {
             let newProductData = data.find(sameID => sameID._id === listProducts[i].id);
@@ -242,7 +243,7 @@ btnSubmit.addEventListener('click', function (e) {
 
     let basicRegExp = new RegExp("^[A-Za-zÀ-Öà-öø-ÿ\ \-]*$")
     let numberRegExp = new RegExp("^[0-9A-Za-zÀ-Öà-öø-ÿ\ \-]*$")
-    let emailRegExp = new RegExp("^[A-Za-z\.\-\_]+\@[A-Za-z]+\.[A-Za-z]{1,10}$")
+    let emailRegExp = new RegExp("^[0-9A-Za-z\.\-\_]+\@[A-Za-z]+\.[A-Za-z]{1,10}$")
 
     console.log(contact);
 
